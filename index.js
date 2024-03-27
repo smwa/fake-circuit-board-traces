@@ -43,7 +43,7 @@ const drawLine = (points) => {
   const _points = points.map(gridPointToCanvasPoint);
 
   ctx.strokeStyle = "#000000";
-  ctx.lineCap = 'round';
+  ctx.lineCap = 'butt';
   ctx.lineJoin = 'round';
   ctx.lineWidth = lineWidth;
   ctx.beginPath();

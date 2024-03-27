@@ -11,82 +11,81 @@ let gridY = 30;
 let blockedOffX = 22; // Can be undefined
 let blockedOffY = 10;
 
-const blockOffGrid = (grid) => {
-  // This function doesn't have to do anything. Good for blocking off a text area
-
-  if (typeof(blockedOffX) === "undefined" || typeof(blockedOffY) === "undefined") {
-    console.log("returning")
-    return;
-  };
-
-  for (let i = blockedOffX; i <= gridX - blockedOffX; i++) {
-    for (let j = blockedOffY; j <= gridY - blockedOffY; j++) {
-      grid[i][j] = 0;
-    }
-  }
-
-  for (let j = blockedOffY + 1; j <= gridY - blockedOffY - 1; j++) {
-    grid[blockedOffX - 1][j] = 0;
-    grid[gridX - blockedOffX + 1][j] = 0;
-  }
-
-};
-
-const canvasSizeAverage = (canvasSizeX + canvasSizeY) / 2.0;
-const gridPointSizeX = canvasSizeX / gridX;
-const gridPointSizeY = canvasSizeY / gridY;
-const lineWidth = scalar * canvasSizeAverage / 400;
-const dotLineWidth = scalar * lineWidth * 1.8;
-const dotSize = scalar * lineWidth * 0.5;
-
-const drawLine = (points) => {
-  const _points = points.map(gridPointToCanvasPoint);
-
-  ctx.strokeStyle = "#000000";
-  ctx.lineCap = 'butt';
-  ctx.lineJoin = 'round';
-  ctx.lineWidth = lineWidth;
-  ctx.beginPath();
-  const firstPoint = _points.shift();
-  ctx.moveTo(firstPoint.x, firstPoint.y);
-
-  _points.forEach(point => {
-    ctx.lineTo(point.x, point.y);
-  });
-
-  ctx.stroke();
-
-  drawConnection(firstPoint);
-  drawConnection(_points[_points.length - 1]);
-};
-
-const drawConnection = (point) => {
-  ctx.beginPath();
-  ctx.arc(point.x, point.y, dotSize, 0, 2 * Math.PI, false);
-  ctx.lineWidth = dotLineWidth;
-  ctx.strokeStyle = '#000000';
-  ctx.stroke();
-  ctx.fillStyle = '#FFFFFF';
-  ctx.fill()
-};
-
-const gridPointToCanvasPoint = (point) => {
-  return {
-    x: ((point.x * gridPointSizeX) + dotSize * 4) * (1 - ((dotSize * 6) / canvasSizeX)),
-    y: ((point.y * gridPointSizeY) + dotSize * 4) * (1 - ((dotSize * 6) / canvasSizeY)),
-  };
-};
-
-const randomPoint = () => {
-  return {
-    x: Math.floor(Math.random() * gridX),
-    y: Math.floor(Math.random() * gridY),
-  };
-};
-
-
-
 const generate = () => {
+
+  const blockOffGrid = (grid) => {
+    // This function doesn't have to do anything. Good for blocking off a text area
+
+    if (typeof(blockedOffX) === "undefined" || typeof(blockedOffY) === "undefined") {
+      console.log("returning")
+      return;
+    };
+
+    for (let i = blockedOffX; i <= gridX - blockedOffX; i++) {
+      for (let j = blockedOffY; j <= gridY - blockedOffY; j++) {
+        grid[i][j] = 0;
+      }
+    }
+
+    for (let j = blockedOffY + 1; j <= gridY - blockedOffY - 1; j++) {
+      grid[blockedOffX - 1][j] = 0;
+      grid[gridX - blockedOffX + 1][j] = 0;
+    }
+
+  };
+
+  const canvasSizeAverage = (canvasSizeX + canvasSizeY) / 2.0;
+  const gridPointSizeX = canvasSizeX / gridX;
+  const gridPointSizeY = canvasSizeY / gridY;
+  const lineWidth = scalar * canvasSizeAverage / 400;
+  const dotLineWidth = scalar * lineWidth * 1.8;
+  const dotSize = scalar * lineWidth * 0.5;
+
+  const drawLine = (points) => {
+    const _points = points.map(gridPointToCanvasPoint);
+
+    ctx.strokeStyle = "#000000";
+    ctx.lineCap = 'butt';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = lineWidth;
+    ctx.beginPath();
+    const firstPoint = _points.shift();
+    ctx.moveTo(firstPoint.x, firstPoint.y);
+
+    _points.forEach(point => {
+      ctx.lineTo(point.x, point.y);
+    });
+
+    ctx.stroke();
+
+    drawConnection(firstPoint);
+    drawConnection(_points[_points.length - 1]);
+  };
+
+  const drawConnection = (point) => {
+    ctx.beginPath();
+    ctx.arc(point.x, point.y, dotSize, 0, 2 * Math.PI, false);
+    ctx.lineWidth = dotLineWidth;
+    ctx.strokeStyle = '#000000';
+    ctx.stroke();
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fill()
+  };
+
+  const gridPointToCanvasPoint = (point) => {
+    return {
+      x: ((point.x * gridPointSizeX) + dotSize * 4) * (1 - ((dotSize * 6) / canvasSizeX)),
+      y: ((point.y * gridPointSizeY) + dotSize * 4) * (1 - ((dotSize * 6) / canvasSizeY)),
+    };
+  };
+
+  const randomPoint = () => {
+    return {
+      x: Math.floor(Math.random() * gridX),
+      y: Math.floor(Math.random() * gridY),
+    };
+  };
+
   ctx.clearRect(0, 0, canvasSizeX, canvasSizeY);
 
   const grid = [];
@@ -165,27 +164,9 @@ const generate = () => {
 
 
 
-function downloadCanvasAsImage(){
 
-  let canvasImage = document.getElementById('canvas').toDataURL('image/png');
-  
-  // this can be used to download any image from webpage to local disk
-  let xhr = new XMLHttpRequest();
-  xhr.responseType = 'blob';
-  xhr.onload = function () {
-      let a = document.createElement('a');
-      a.href = window.URL.createObjectURL(xhr.response);
-      a.download = 'image_name.png';
-      a.style.display = 'none';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    };
-    xhr.open('GET', canvasImage); // This is to download the canvas Image
-    xhr.send();
-}
 
 generate();
 
-document.getElementById('download').onclick = downloadCanvasAsImage;
+document.getElementById('download').onclick = () => { downloadCanvasAsImage(canvas) };
 document.getElementById('generate').onclick = generate;

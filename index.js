@@ -2,6 +2,7 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 const generate = () => {
+
   const input_ratio = parseFloat(document.getElementById('input-ratio').value);
   const input_line = parseFloat(document.getElementById('input-line').value);
   const input_num_lines = parseFloat(document.getElementById('input-num-lines').value);
@@ -26,6 +27,9 @@ const generate = () => {
     blockedOffX = undefined;
     blockedOffY = undefined;
   }
+
+
+  ctx.clearRect(0, 0, canvasSizeX, canvasSizeX); // X * X is intentional, since our actual canvas is square
 
 
   const blockOffGrid = (grid) => {
@@ -100,8 +104,6 @@ const generate = () => {
       y: Math.floor(Math.random() * gridY),
     };
   };
-
-  ctx.clearRect(0, 0, canvasSizeX, canvasSizeY);
 
   const grid = [];
   for (let i = 0; i < gridX; i++) {

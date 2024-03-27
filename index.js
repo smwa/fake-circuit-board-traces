@@ -1,28 +1,33 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-const canvasSizeX = 12000;
-const canvasSizeY = 6000;
-const scalar = 1.6;
-const numberOfLines = 10000;
-const gridX = 60;
-const gridY = 30;
+let canvasSizeX = 12000;
+let canvasSizeY = 6000;
+let scalar = 1.6;
+let numberOfLines = 10000;
+let gridX = 60;
+let gridY = 30;
+
+let blockedOffX = 22; // Can be undefined
+let blockedOffY = 10;
 
 const blockOffGrid = (grid) => {
   // This function doesn't have to do anything. Good for blocking off a text area
 
-  const left = 22;
-  const top = 10;
+  if (typeof(blockedOffX) === "undefined" || typeof(blockedOffY) === "undefined") {
+    console.log("returning")
+    return;
+  };
 
-  for (let i = left; i <= gridX - left; i++) {
-    for (let j = top; j <= gridY - top; j++) {
+  for (let i = blockedOffX; i <= gridX - blockedOffX; i++) {
+    for (let j = blockedOffY; j <= gridY - blockedOffY; j++) {
       grid[i][j] = 0;
     }
   }
 
-  for (let j = top + 1; j <= gridY - top - 1; j++) {
-    grid[left - 1][j] = 0;
-    grid[gridX - left + 1][j] = 0;
+  for (let j = blockedOffY + 1; j <= gridY - blockedOffY - 1; j++) {
+    grid[blockedOffX - 1][j] = 0;
+    grid[gridX - blockedOffX + 1][j] = 0;
   }
 
 };

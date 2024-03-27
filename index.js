@@ -1,17 +1,32 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-let canvasSizeX = 12000;
-let canvasSizeY = 6000;
-let scalar = 1.6;
-let numberOfLines = 10000;
-let gridX = 60;
-let gridY = 30;
-
-let blockedOffX = 22; // Can be undefined
-let blockedOffY = 10;
-
 const generate = () => {
+  const input_ratio = parseFloat(document.getElementById('input-ratio').value);
+  const input_line = parseFloat(document.getElementById('input-line').value);
+  const input_num_lines = parseFloat(document.getElementById('input-num-lines').value);
+  const input_grid_x = parseFloat(document.getElementById('input-grid-x').value);
+  const input_grid_y = parseFloat(document.getElementById('input-grid-y').value);
+  const input_blocked_x = parseFloat(document.getElementById('input-blocked-x').value);
+  const input_blocked_y = parseFloat(document.getElementById('input-blocked-y').value);
+
+  let canvasSizeX = 12000;
+  let canvasSizeY = canvasSizeX * input_ratio;
+  let scalar = input_line;
+  let numberOfLines = input_num_lines;
+  let gridX = input_grid_x;
+  let gridY = input_grid_y;
+  let blockedOffX = input_blocked_x; // Can be undefined
+  let blockedOffY = input_blocked_y;
+
+  if (
+    isNaN(blockedOffX)
+    || isNaN(blockedOffY)
+  ) {
+    blockedOffX = undefined;
+    blockedOffY = undefined;
+  }
+
 
   const blockOffGrid = (grid) => {
     // This function doesn't have to do anything. Good for blocking off a text area

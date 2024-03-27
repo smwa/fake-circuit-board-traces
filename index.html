@@ -1,9 +1,45 @@
-<canvas id="canvas" width="12000" height="6000"></canvas>
+<div>
+  Height-To-Width Ratio
+  <input id="input-ratio" placeholder="height-to-width ratio" type="number" step="0.01" min="0.01" max="8.00" value="0.5" />
+</div>
+
+<div>
+  Line Width
+  <input id="input-line" placeholder="line width" type="number" step="0.1" min="0.1" max="10.0" value="1.6" />
+</div>
+
+<div>
+  Density
+  <input id="input-num-lines" placeholder="density" type="number" step="1" min="1" max="10000" value="1000" />
+</div>
+
+<div>
+  Grid Width
+  <input id="input-grid-x" placeholder="Grid width" type="number" step="1" min="4" max="1000" value="60" />
+</div>
+
+<div>
+  Grid Height
+  <input id="input-grid-y" placeholder="Grid height" type="number" step="1" min="4" max="1000" value="30" />
+</div>
+
+<div>
+  Optional: Block Off Middle Region, From Left
+  <input id="input-blocked-x" placeholder="Optional: block off middle region, from left" type="number" step="1" min="1" max="1000" value="22" />
+</div>
+
+<div>
+  Optional: Block Off Middle Region, From Top
+  <input id="input-blocked-y" placeholder="Optional: block off middle region, from top" type="number" step="1" min="1" max="1000" value="10" />
+</div>
 
 <div>
   <button id="download">Download</button>
   <button id="generate">Generate New Image</button>
 </div>
+
+<canvas id="canvas" width="12000" height="12000"></canvas>
+
 
 <script src="./astar.js"></script>
 <script src="./functions.js"></script>

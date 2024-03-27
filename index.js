@@ -79,77 +79,82 @@ const randomPoint = () => {
   };
 };
 
-const grid = [];
-for (let i = 0; i < gridX; i++) {
-  const n = [];
-  for (let j = 0; j < gridY; j++) {
-    n.push(1);
-  }
-  grid.push(n);
-}
 
-blockOffGrid(grid);
 
-const linesToDraw = [];
+const generate = () => {
+  ctx.clearRect(0, 0, canvasSizeX, canvasSizeY);
 
-for (let i = 0; i < numberOfLines; i++) {
-  linesToDraw.push([
-    randomPoint(),
-    randomPoint(),
-  ])
-}
-
-counter = 0;
-
-linesToDraw.map((line) => {
-
-  if (grid[line[0].x][line[0].y] < 1) {
-    console.error("Starting point unavailable");
-    return null;
+  const grid = [];
+  for (let i = 0; i < gridX; i++) {
+    const n = [];
+    for (let j = 0; j < gridY; j++) {
+      n.push(1);
+    }
+    grid.push(n);
   }
 
-  const graph = new Graph(grid, { diagonal: true });
-  const start = graph.grid[line[0].x][line[0].y];
-  const end = graph.grid[line[1].x][line[1].y];
-  const result = astar.search(graph, start, end);
-  if (result.length < 1) {
-    console.error("No path found");
-    return null;
-  }
-  result.unshift(start);
-  let prev = start;
+  blockOffGrid(grid);
 
-  // clear gap around start and ends:
-  [start, end].forEach((p) => {
-    for (let i = p.x - 1; i <= p.x + 1; i++) {
-      for (let j = p.y - 1; j <= p.y + 1; j++) {
-        if (grid[i] && grid[i][j]) {
-          grid[i][j] = 0;
+  const linesToDraw = [];
+
+  for (let i = 0; i < numberOfLines; i++) {
+    linesToDraw.push([
+      randomPoint(),
+      randomPoint(),
+    ])
+  }
+
+  counter = 0;
+
+  linesToDraw.map((line) => {
+
+    if (grid[line[0].x][line[0].y] < 1) {
+      // console.error("Starting point unavailable");
+      return null;
+    }
+
+    const graph = new Graph(grid, { diagonal: true });
+    const start = graph.grid[line[0].x][line[0].y];
+    const end = graph.grid[line[1].x][line[1].y];
+    const result = astar.search(graph, start, end);
+    if (result.length < 1) {
+      // console.error("No path found");
+      return null;
+    }
+    result.unshift(start);
+    let prev = start;
+
+    // clear gap around start and ends:
+    [start, end].forEach((p) => {
+      for (let i = p.x - 1; i <= p.x + 1; i++) {
+        for (let j = p.y - 1; j <= p.y + 1; j++) {
+          if (grid[i] && grid[i][j]) {
+            grid[i][j] = 0;
+          }
         }
       }
-    }
-  });
+    });
 
-  result.forEach((node) => {
-    grid[node.x][node.y] = 0;
+    result.forEach((node) => {
+      grid[node.x][node.y] = 0;
 
-    if (node.x != prev.x && node.y != prev.y) { // Diagonal
-      // Removes hitches, which were fun
-      grid[prev.x][node.y] = 0;
-    }
+      if (node.x != prev.x && node.y != prev.y) { // Diagonal
+        // Removes hitches, which were fun
+        grid[prev.x][node.y] = 0;
+      }
 
-    prev = node;
-  });
-  return result.map((node) => ({
-    x: node.x,
-    y: node.y,
-  }));
-})
-.filter((x) => x)
-.map(drawLine);
-
+      prev = node;
+    });
+    return result.map((node) => ({
+      x: node.x,
+      y: node.y,
+    }));
+  })
+  .filter((x) => x)
+  .map(drawLine);
 
 
+};
 
 
 
@@ -175,4 +180,7 @@ function downloadCanvasAsImage(){
     xhr.send();
 }
 
-downloadCanvasAsImage();
+generate();
+
+document.getElementById('download').onclick = downloadCanvasAsImage;
+document.getElementById('generate').onclick = generate;

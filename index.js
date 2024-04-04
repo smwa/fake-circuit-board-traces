@@ -1,7 +1,7 @@
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+let ctx = null;
 
 const generate = () => {
+  const CANVAS_SIZE = 800;
 
   const input_ratio = parseFloat(document.getElementById('input-ratio').value);
   const input_line = parseFloat(document.getElementById('input-line').value);
@@ -11,7 +11,7 @@ const generate = () => {
   const input_blocked_x = parseFloat(document.getElementById('input-blocked-x').value);
   const input_blocked_y = parseFloat(document.getElementById('input-blocked-y').value);
 
-  let canvasSizeX = 12000;
+  let canvasSizeX = CANVAS_SIZE;
   let canvasSizeY = canvasSizeX * input_ratio;
   let scalar = input_line;
   let numberOfLines = input_num_lines;
@@ -29,7 +29,7 @@ const generate = () => {
   }
 
 
-  ctx.clearRect(0, 0, canvasSizeX, canvasSizeX); // X * X is intentional, since our actual canvas is square
+  ctx = new C2S(canvasSizeX, canvasSizeY)
 
 
   const blockOffGrid = (grid) => {
@@ -174,6 +174,7 @@ const generate = () => {
   .filter((x) => x)
   .map(drawLine);
 
+  document.getElementById("svg-container").innerHTML = ctx.getSerializedSvg();
 
 };
 
@@ -185,5 +186,36 @@ const generate = () => {
 
 generate();
 
-document.getElementById('download').onclick = () => { downloadCanvasAsImage(canvas) };
+document.getElementById('download').onclick = () => {
+  var source = ctx.getSerializedSvg();
+
+  //add name spaces.
+  if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)){
+      source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+  }
+  if(!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)){
+      source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
+  }
+
+  //add xml declaration
+  source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+
+  //convert svg source to URI data scheme.
+  var url = "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(source);
+
+  let xhr = new XMLHttpRequest();
+  xhr.responseType = 'blob';
+  xhr.onload = function () {
+    let a = document.createElement('a');
+    a.href = window.URL.createObjectURL(xhr.response);
+    a.download = 'circuits.svg';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+  xhr.open('GET', url); // This is to download the canvas Image
+  xhr.send();
+};
+
 document.getElementById('generate').onclick = generate;

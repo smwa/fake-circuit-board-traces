@@ -87,8 +87,6 @@ const generate = () => {
     ctx.lineWidth = dotLineWidth;
     ctx.strokeStyle = '#000000';
     ctx.stroke();
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fill()
   };
 
   const gridPointToCanvasPoint = (point) => {

@@ -29,7 +29,9 @@ const generate = () => {
   }
 
 
-  ctx = new C2S(canvasSizeX, canvasSizeY)
+  ctx = new C2S(canvasSizeX, canvasSizeY);
+  ctx.fillStyle = "#FFFFFF";
+  ctx.fillRect(0, 0, canvasSizeX, canvasSizeY);
 
 
   const blockOffGrid = (grid) => {
@@ -84,6 +86,8 @@ const generate = () => {
   const drawConnection = (point) => {
     ctx.beginPath();
     ctx.arc(point.x, point.y, dotSize, 0, 2 * Math.PI, false);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fill();
     ctx.lineWidth = dotLineWidth;
     ctx.strokeStyle = '#000000';
     ctx.stroke();
